@@ -190,6 +190,28 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+vim.keymap.set('n', '<leader>1', '1gt', { desc = 'Move to the first tab' })
+vim.keymap.set('n', '<leader>2', '2gt', { desc = 'Move to the second tab' })
+vim.keymap.set('n', '<leader>3', '3gt', { desc = 'Move to the third tab' })
+vim.keymap.set('n', '<leader>4', '4gt', { desc = 'Move to the fourth tab' })
+vim.keymap.set('n', '<leader>5', '5gt', { desc = 'Move to the fifth tab' })
+vim.keymap.set('n', '<leader>6', '6gt', { desc = 'Move to the sixth tab' })
+vim.keymap.set('n', '<leader>7', '7gt', { desc = 'Move to the seventh tab' })
+vim.keymap.set('n', '<leader>8', '8gt', { desc = 'Move to the eigth tab' })
+vim.keymap.set('n', '<leader>9', '9gt', { desc = 'Move to the ninth tab' })
+vim.keymap.set('n', '<leader>0', 'tablast<cr>', { desc = 'Move to the previous tab' })
+
+--[[ noremap <leader>1 1gt
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr> ]]
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -203,6 +225,22 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+-- Check if the 'autocmd' feature is available
+if vim.fn.has 'autocmd' == 1 then
+  -- Create the 'module' augroup
+  local module_group = vim.api.nvim_create_augroup('drupal/php', { clear = true })
+  vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+    pattern = { '*.module', '*.theme', '*.install', '*.inc', '*.profile', '*.view' },
+    command = 'set filetype=php',
+    group = module_group,
+  })
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'php',
+    command = 'set omnifunc=phpcomplete',
+    group = module_group,
+  })
+end
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
