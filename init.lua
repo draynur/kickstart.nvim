@@ -587,8 +587,39 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
-        --
+        tsserver = {},
+        volar = {},
+        intelephense = {
+          init_options = {
+            licenceKey = '00D530S8G6M33CH',
+          },
+          settings = {
+            intelephense = {
+              stubs = {
+                'bcmath',
+                'bz2',
+                'calendar',
+                'Core',
+                'curl',
+                'zip',
+                'zlib',
+                'wordpress',
+                'woocommerce',
+                'acf-pro',
+                'wordpress-globals',
+                'wp-cli',
+                'genesis',
+                'polylang',
+              },
+              environment = {
+                includePaths = 'C:/Users/jruny/AppData/Roaming/Composer/vendor/php-stubs',
+              },
+              files = {
+                maxSize = 5000000,
+              },
+            },
+          },
+        },
 
         lua_ls = {
           -- cmd = {...},
@@ -768,7 +799,7 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
+  --[[ { -- You can easily change to a different colorscheme.
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
     --
@@ -783,6 +814,14 @@ require('lazy').setup({
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
+    end,
+  }, ]]
+  {
+    'chriskempson/base16-vim',
+    priority = 1000, -- Make sure to load this before all the other start plugins.
+    init = function()
+      vim.cmd.colorscheme 'base16-default-dark'
+      vim.cmd.set 'termguicolors'
     end,
   },
 
