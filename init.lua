@@ -613,7 +613,7 @@ require('lazy').setup({
               'polylang',
             },
             environment = {
-              includePaths = '/home/jack/.composer/vendor/php-stubs',
+              includePaths = 'C:/Users/jruny/AppData/Roaming/Composer',
             },
             files = {
               maxSize = 5000000,
