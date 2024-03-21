@@ -201,6 +201,8 @@ vim.keymap.set('n', '<leader>8', '8gt', { desc = 'Move to the eigth tab' })
 vim.keymap.set('n', '<leader>9', '9gt', { desc = 'Move to the ninth tab' })
 vim.keymap.set('n', '<leader>0', 'tablast<cr>', { desc = 'Move to the previous tab' })
 
+vim.keymap.set('n', '<leader>e.', ':e .<cr>', { desc = 'Open current directory in NetRW' })
+
 --[[ noremap <leader>1 1gt
 noremap <leader>2 2gt
 noremap <leader>3 3gt
