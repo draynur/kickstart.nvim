@@ -228,6 +228,18 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_augroup('bg', {})
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = 'bg',
+  pattern = '*',
+  callback = function()
+    vim.cmd 'highlight Normal ctermbg=none guibg=NONE'
+    vim.cmd 'highlight NonText ctermbg=none guibg=NONE'
+    vim.cmd 'highlight LineNr ctermbg=none guibg=NONE'
+  end,
+})
+
 -- Check if the 'autocmd' feature is available
 if vim.fn.has 'autocmd' == 1 then
   -- Create the 'module' augroup
