@@ -605,6 +605,10 @@ require('lazy').setup({
       --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
+      --
+
+      local lsp_util = require 'lspconfig.util'
+
       local servers = {
         -- clangd = {},
         -- gopls = {},
@@ -622,6 +626,7 @@ require('lazy').setup({
           init_options = {
             licenceKey = '00D530S8G6M33CH',
           },
+          root_dir = lsp_util.root_pattern('.git'),
           settings = {
             stubs = {
               'bcmath',
@@ -641,10 +646,24 @@ require('lazy').setup({
             },
             environment = {
               includePaths = '/home/jack/.composer/vendor/php-stubs',
+              shortOpenTag = true,
+            },
+            diagnostics = {
+              enable = true
+            },
+            format = {
+              enable = true
             },
             files = {
               maxSize = 5000000,
+              assocations = {
+                '*.php',
+                '*.phtml',
+                '*.module',
+                '*.inc',
+              }
             },
+            telemetry = { enabled = false },
           },
         },
 
@@ -788,12 +807,12 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<C-Space>'] = cmp.mapping.confirm { select = true },
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<C-y>'] = cmp.mapping.complete {},
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
