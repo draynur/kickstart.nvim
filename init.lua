@@ -202,6 +202,7 @@ vim.keymap.set('n', '<leader>9', '9gt', { desc = 'Move to the ninth tab' })
 vim.keymap.set('n', '<leader>0', 'tablast<cr>', { desc = 'Move to the previous tab' })
 
 vim.keymap.set('n', '<leader>e.', ':e .<cr>', { desc = 'Open current directory in NetRW' })
+vim.keymap.set('n', '<leader>nn', ':Neotree<cr>', { desc = 'Open nvim tree in current directory' })
 
 --[[ noremap <leader>1 1gt
 noremap <leader>2 2gt
@@ -327,6 +328,20 @@ require('lazy').setup({
         ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
       }
+    end,
+  },
+  {
+    'nvim-neo-tree/neo-tree.nvim',
+    branch = 'v2.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+      'MunifTanjim/nui.nvim',
+    },
+    config = function()
+      -- Unless you are still migrating, remove the deprecated commands from v1.x
+      vim.cmd [[ let g:neo_tree_remove_legacy_commands = 1 ]]
+      require('neo-tree').setup {}
     end,
   },
 
