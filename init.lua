@@ -190,6 +190,7 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Keybinds for navigatin tabs
 vim.keymap.set('n', '<leader>1', '1gt', { desc = 'Move to the first tab' })
 vim.keymap.set('n', '<leader>2', '2gt', { desc = 'Move to the second tab' })
 vim.keymap.set('n', '<leader>3', '3gt', { desc = 'Move to the third tab' })
@@ -201,19 +202,13 @@ vim.keymap.set('n', '<leader>8', '8gt', { desc = 'Move to the eigth tab' })
 vim.keymap.set('n', '<leader>9', '9gt', { desc = 'Move to the ninth tab' })
 vim.keymap.set('n', '<leader>0', 'tablast<cr>', { desc = 'Move to the previous tab' })
 
+-- Keymaps for Neotree
 vim.keymap.set('n', '<leader>e.', ':e .<cr>', { desc = 'Open current directory in NetRW' })
 vim.keymap.set('n', '<leader>nn', ':Neotree<cr>', { desc = 'Open nvim tree in current directory' })
 
---[[ noremap <leader>1 1gt
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
-noremap <leader>0 :tablast<cr> ]]
+-- Keymaps for using HopWord
+vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
+vim.keymap.set('n', '<leader>ff', ':HopChar1<cr>', { desc = 'Go to any word' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -330,6 +325,28 @@ require('lazy').setup({
       }
     end,
   },
+  {
+    'hadronized/hop.nvim',
+    config = function()
+      require('hop').setup()
+      local hop = require 'hop'
+
+      local directions = require('hop.hint').HintDirection
+      vim.keymap.set('', 'f', function()
+        hop.hint_char1 { direction = directions.AFTER_CURSOR, current_line_only = true }
+      end, { remap = true })
+      vim.keymap.set('', 'F', function()
+        hop.hint_char1 { direction = directions.BEFORE_CURSOR, current_line_only = true }
+      end, { remap = true })
+      vim.keymap.set('', 't', function()
+        hop.hint_char1 { direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 }
+      end, { remap = true })
+      vim.keymap.set('', 'T', function()
+        hop.hint_char1 { direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 }
+      end, { remap = true })
+    end,
+  },
+  -- This plugin will give you a pretty tree of folders/files from your working directory. Filterable and sortable
   {
     'nvim-neo-tree/neo-tree.nvim',
     branch = 'v2.x',
@@ -794,12 +811,12 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-Space>'] = cmp.mapping.confirm { select = true },
+          ['<C-y>'] = cmp.mapping.confirm { select = true },
 
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
-          ['<C-y>'] = cmp.mapping.complete {},
+          ['<C-space>'] = cmp.mapping.complete {},
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
