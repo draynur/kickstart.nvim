@@ -204,7 +204,7 @@ vim.keymap.set('n', '<leader>0', 'tablast<cr>', { desc = 'Move to the previous t
 
 -- Keymaps for Neotree
 vim.keymap.set('n', '<leader>e.', ':e .<cr>', { desc = 'Open current directory in NetRW' })
-vim.keymap.set('n', '<leader>nn', ':Neotree<cr>', { desc = 'Open nvim tree in current directory' })
+vim.keymap.set('n', '<leader>nn', ':NeoTreeFloat<cr>', { desc = 'Open nvim tree in current directory' })
 
 -- Keymaps for using HopWord
 vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
