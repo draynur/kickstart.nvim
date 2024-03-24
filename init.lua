@@ -292,6 +292,7 @@ require('lazy').setup({
     'voldikss/vim-floaterm',
     config = function()
       vim.keymap.set('n', '<leader>gs', ':FloatermNew nvim -c ":G" +only<cr>', { desc = 'Open terminal and show git status' })
+      vim.keymap.set('n', '<leader>gg', ':vertical G<cr>', { desc = 'Show git status' })
     end,
   },
 
