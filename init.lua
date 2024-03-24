@@ -286,6 +286,14 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  -- Watch out, a fugitive!
+  'tpope/vim-fugitive',
+  {
+    'voldikss/vim-floaterm',
+    config = function()
+      vim.keymap.set('n', '<leader>gs', ':FloatermNew nvim -c ":G" +only<cr>', { desc = 'Open terminal and show git status' })
+    end,
+  },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -497,7 +505,6 @@ require('lazy').setup({
       end, { desc = '[S]earch [N]eovim files' })
     end,
   },
-
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -897,12 +904,8 @@ require('lazy').setup({
       vim.cmd.set 'termguicolors'
     end,
   },
-  -- Watch out, a fugitive!
-  { 'tpope/vim-fugitive' },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
