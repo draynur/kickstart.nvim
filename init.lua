@@ -210,6 +210,9 @@ vim.keymap.set('n', '<leader>nn', ':NeoTreeFloat<cr>', { desc = 'Open nvim tree 
 vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
 vim.keymap.set('n', '<leader>ff', ':HopChar1<cr>', { desc = 'Go to any word' })
 
+-- Keymaps for using Gitsigns
+vim.keymap.set('n', '<leader>df', ':Gitsigns diffthis<cr>', { desc = 'Diff this file.' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -227,16 +230,36 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- Check if the 'autocmd' feature is available
 if vim.fn.has 'autocmd' == 1 then
   -- Create the 'module' augroup
-  local module_group = vim.api.nvim_create_augroup('drupal/php', { clear = true })
+  vim.api.nvim_create_augroup('drupal/php', { clear = true })
   vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
     pattern = { '*.module', '*.theme', '*.install', '*.inc', '*.profile', '*.view' },
     command = 'set filetype=php',
-    group = module_group,
+    group = 'drupal/php',
   })
   vim.api.nvim_create_autocmd('FileType', {
     pattern = 'php',
     command = 'set omnifunc=phpcomplete',
-    group = module_group,
+    group = 'drupal/php',
+  })
+
+  -- Some background helpers for a transparent background.
+  vim.api.nvim_create_augroup('bg', {})
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'bg',
+    pattern = '*',
+    command = 'highlight Normal ctermbg=none guibg=NONE',
+  })
+
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'bg',
+    pattern = '*',
+    command = 'highlight NonText ctermbg=none guibg=NONE',
+  })
+
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'bg',
+    pattern = '*',
+    command = 'highlight LineNr ctermbg=none guibg=NONE',
   })
 end
 
@@ -874,6 +897,8 @@ require('lazy').setup({
       vim.cmd.set 'termguicolors'
     end,
   },
+  -- Watch out, a fugitive!
+  { 'tpope/vim-fugitive' },
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
