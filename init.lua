@@ -202,17 +202,14 @@ vim.keymap.set('n', '<leader>9', '9gt', { desc = 'Move to the ninth tab' })
 vim.keymap.set('n', '<leader>0', 'tablast<cr>', { desc = 'Move to the previous tab' })
 
 vim.keymap.set('n', '<leader>e.', ':e .<cr>', { desc = 'Open current directory in NetRW' })
+vim.keymap.set('n', '<leader>nn', ':Neotree<cr>', { desc = 'Open nvim tree in current directory' })
 
---[[ noremap <leader>1 1gt
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
-noremap <leader>0 :tablast<cr> ]]
+vim.keymap.set('n', '<leader>nn', ':NeoTreeFloat<cr>', { desc = 'Open nvim tree in current directory' })
+-- Keymaps for using HopWord
+vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
+vim.keymap.set('n', '<leader>ff', ':HopChar1<cr>', { desc = 'Go to any word' })
+-- Keymaps for using Gitsigns
+vim.keymap.set('n', '<leader>df', ':Gitsigns diffthis<cr>', { desc = 'Diff this file.' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -230,16 +227,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 vim.api.nvim_create_augroup('bg', {})
 
-vim.api.nvim_create_autocmd('VimEnter', {
-  group = 'bg',
-  pattern = '*',
-  callback = function()
-    vim.cmd 'highlight Normal ctermbg=none guibg=NONE'
-    vim.cmd 'highlight NonText ctermbg=none guibg=NONE'
-    vim.cmd 'highlight LineNr ctermbg=none guibg=NONE'
-  end,
-})
-
 -- Check if the 'autocmd' feature is available
 if vim.fn.has 'autocmd' == 1 then
   -- Create the 'module' augroup
@@ -253,6 +240,15 @@ if vim.fn.has 'autocmd' == 1 then
     pattern = 'php',
     command = 'set omnifunc=phpcomplete',
     group = module_group,
+  })
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'bg',
+    pattern = '*',
+    callback = function()
+      vim.cmd 'highlight Normal ctermbg=none guibg=NONE'
+      vim.cmd 'highlight NonText ctermbg=none guibg=NONE'
+      vim.cmd 'highlight LineNr ctermbg=none guibg=NONE'
+    end,
   })
 end
 
@@ -288,13 +284,41 @@ require('lazy').setup({
     config = function()
       -- Unless you are still migrating, remove the deprecated commands from v1.x
       vim.cmd [[ let g:neo_tree_remove_legacy_commands = 1 ]]
-
       require('neo-tree').setup {}
     end,
   },
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  'tpope/vim-fugitive', -- Detect tabstop and shiftwidth automatically
+  {
+    'voldikss/vim-floaterm',
+     config = function()
+      -- Unless you are still migrating, remove the deprecated commands from v1.x
+      vim.keymap.set('n', '<leader>gs', ':FloatermNew nvim -c ":G" +only<cr>', { desc = 'Open terminal and show git status' })
+      vim.keymap.set('n', '<leader>gg', ':vertical G<cr>', { desc = 'Show git status' })
+     end,
+  },
+  {
+    'hadronized/hop.nvim',
+    config = function()
+      require('hop').setup()
+      local hop = require 'hop'
 
+      local directions = require('hop.hint').HintDirection
+      vim.keymap.set('', 'f', function()
+        hop.hint_char1 { direction = directions.AFTER_CURSOR, current_line_only = true }
+      end, { remap = true })
+      vim.keymap.set('', 'F', function()
+        hop.hint_char1 { direction = directions.BEFORE_CURSOR, current_line_only = true }
+      end, { remap = true })
+      vim.keymap.set('', 't', function()
+        hop.hint_char1 { direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 }
+      end, { remap = true })
+      vim.keymap.set('', 'T', function()
+        hop.hint_char1 { direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 }
+      end, { remap = true })
+    end,
+  },
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -626,7 +650,7 @@ require('lazy').setup({
           init_options = {
             licenceKey = '00D530S8G6M33CH',
           },
-          root_dir = lsp_util.root_pattern('.git'),
+          root_dir = lsp_util.root_pattern '.git',
           settings = {
             stubs = {
               'bcmath',
@@ -649,10 +673,10 @@ require('lazy').setup({
               shortOpenTag = true,
             },
             diagnostics = {
-              enable = true
+              enable = true,
             },
             format = {
-              enable = true
+              enable = true,
             },
             files = {
               maxSize = 5000000,
@@ -661,7 +685,7 @@ require('lazy').setup({
                 '*.phtml',
                 '*.module',
                 '*.inc',
-              }
+              },
             },
             telemetry = { enabled = false },
           },
@@ -920,6 +944,7 @@ require('lazy').setup({
       auto_install = true,
       highlight = {
         enable = true,
+        disable = {'git', 'diff', 'gitdiff', 'gitcommit'},
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
