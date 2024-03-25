@@ -204,17 +204,12 @@ vim.keymap.set('n', '<leader>0', 'tablast<cr>', { desc = 'Move to the previous t
 vim.keymap.set('n', '<leader>e.', ':e .<cr>', { desc = 'Open current directory in NetRW' })
 vim.keymap.set('n', '<leader>nn', ':Neotree<cr>', { desc = 'Open nvim tree in current directory' })
 
---[[ noremap <leader>1 1gt
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
-noremap <leader>0 :tablast<cr> ]]
-
+vim.keymap.set('n', '<leader>nn', ':NeoTreeFloat<cr>', { desc = 'Open nvim tree in current directory' })
+-- Keymaps for using HopWord
+vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
+vim.keymap.set('n', '<leader>ff', ':HopChar1<cr>', { desc = 'Go to any word' })
+-- Keymaps for using Gitsigns
+vim.keymap.set('n', '<leader>df', ':Gitsigns diffthis<cr>', { desc = 'Diff this file.' })
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -243,6 +238,25 @@ if vim.fn.has 'autocmd' == 1 then
     command = 'set omnifunc=phpcomplete',
     group = module_group,
   })
+  -- Some background helpers for a transparent background.
+  vim.api.nvim_create_augroup('bg', {})
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'bg',
+    pattern = '*',
+    command = 'highlight Normal ctermbg=none guibg=NONE',
+  })
+
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'bg',
+    pattern = '*',
+    command = 'highlight NonText ctermbg=none guibg=NONE',
+  })
+
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'bg',
+    pattern = '*',
+    command = 'highlight LineNr ctermbg=none guibg=NONE',
+  })
 end
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -268,7 +282,37 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  -- Watch out, a fugitive!
+  'tpope/vim-fugitive',
+  {
+    'voldikss/vim-floaterm',
+    config = function()
+      vim.keymap.set('n', '<leader>gs', ':FloatermNew nvim -c ":G" +only<cr>', { desc = 'Open terminal and show git status' })
+      vim.keymap.set('n', '<leader>gg', ':vertical G<cr>', { desc = 'Show git status' })
+    end,
+  },
+  {
+    'hadronized/hop.nvim',
+    config = function()
+      require('hop').setup()
+      local hop = require 'hop'
 
+      local directions = require('hop.hint').HintDirection
+      vim.keymap.set('', 'f', function()
+        hop.hint_char1 { direction = directions.AFTER_CURSOR, current_line_only = true }
+      end, { remap = true })
+      vim.keymap.set('', 'F', function()
+        hop.hint_char1 { direction = directions.BEFORE_CURSOR, current_line_only = true }
+      end, { remap = true })
+      vim.keymap.set('', 't', function()
+        hop.hint_char1 { direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 }
+      end, { remap = true })
+      vim.keymap.set('', 'T', function()
+        hop.hint_char1 { direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 }
+      end, { remap = true })
+    end,
+  },
+  -- This plugin will give you a pretty tree of folders/files from your working directory. Filterable and sortable
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
@@ -911,6 +955,7 @@ require('lazy').setup({
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
         additional_vim_regex_highlighting = { 'ruby' },
+        disable = { 'git', 'diff', 'gitcommit' },
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
@@ -919,6 +964,13 @@ require('lazy').setup({
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
+
+      -- require('nvim-treesitter.configs').setup {
+      --   highlight = {
+      --     enable = true, -- false will disable the whole extension
+      --     disable = { 'css', 'clojure' }, -- list of language that will be disabled
+      --   },
+      -- }
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
