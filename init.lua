@@ -292,11 +292,12 @@ require('lazy').setup({
   'tpope/vim-fugitive', -- Detect tabstop and shiftwidth automatically
   {
     'voldikss/vim-floaterm',
-     config = function()
+    config = function()
       -- Unless you are still migrating, remove the deprecated commands from v1.x
       vim.keymap.set('n', '<leader>gs', ':FloatermNew nvim -c ":G" +only<cr>', { desc = 'Open terminal and show git status' })
       vim.keymap.set('n', '<leader>gg', ':vertical G<cr>', { desc = 'Show git status' })
-     end,
+      vim.keymap.set('n', '<leader>ft', ':FloatermToggle<cr>', { desc = 'Toggle terminal.' })
+    end,
   },
   {
     'hadronized/hop.nvim',
@@ -944,7 +945,7 @@ require('lazy').setup({
       auto_install = true,
       highlight = {
         enable = true,
-        disable = {'git', 'diff', 'gitdiff', 'gitcommit'},
+        disable = { 'git', 'diff', 'gitdiff', 'gitcommit' },
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
