@@ -631,6 +631,31 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       --
+      function SetLspRootDir(new_root_dir)
+        local lspconfig = require 'lspconfig'
+        local util = require 'lspconfig.util'
+
+        -- Specify the LSP server you want to configure
+        local server_name = 'intelephense' -- Example: 'pyright'
+
+        local resolved_root_dir = vim.fn.expand(new_root_dir)
+
+        -- Update the root_dir for the server
+        lspconfig[server_name].setup {
+          root_dir = function(fname)
+            -- Use the new_root_dir if provided, otherwise fall back to default
+            return resolved_root_dir or util.root_pattern '.git'(fname)
+          end,
+        }
+
+        -- Restart the LSP server
+        vim.lsp.stop_client(vim.lsp.get_active_clients { name = server_name })
+        vim.cmd 'edit' -- This re-triggers the LSP server start
+      end
+
+      vim.api.nvim_create_user_command('SetLspRootDir', function(opts)
+        SetLspRootDir(opts.args)
+      end, { nargs = 1 })
 
       local lsp_util = require 'lspconfig.util'
 
