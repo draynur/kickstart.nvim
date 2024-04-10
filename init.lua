@@ -291,7 +291,8 @@ require('lazy').setup({
   {
     'voldikss/vim-floaterm',
     config = function()
-      vim.keymap.set('n', '<leader>gs', ':FloatermNew nvim -c ":G" +only<cr>', { desc = 'Open terminal and show git status' })
+      vim.keymap.set('n', '<leader>gs', ':FloatermNew nvim -c ":G" +only<cr>',
+        { desc = 'Open terminal and show git status' })
       vim.keymap.set('n', '<leader>gg', ':vertical G<cr>', { desc = 'Show git status' })
     end,
   },
@@ -306,7 +307,7 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',    opts = {} },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following Lua:
@@ -341,7 +342,7 @@ require('lazy').setup({
   -- after the plugin has been loaded:
   --  config = function() ... end
 
-  { -- Useful plugin to show you pending keybinds.
+  {                     -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
@@ -423,7 +424,7 @@ require('lazy').setup({
       { 'nvim-telescope/telescope-ui-select.nvim' },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
-      { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
+      { 'nvim-tree/nvim-web-devicons',            enabled = vim.g.have_nerd_font },
     },
     config = function()
       -- Telescope is a fuzzy finder that comes with a lot of different things that
@@ -742,6 +743,47 @@ require('lazy').setup({
       --  You can press `g?` for help in this menu.
       require('mason').setup()
 
+      local css_capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+      require 'lspconfig'.cssls.setup {
+        capabilities = css_capabilities,
+        cmd = { 'vscode-css-language-server', '--stdio' },
+        filetypes = { 'css' },
+        init_options = { provideFormatter = false }, -- needed to enable formatting capabilities
+        root_dir = lsp_util.root_pattern('package.json', '.git'),
+        single_file_support = true,
+        settings = {
+          css = { validate = true },
+        },
+      }
+
+      require 'lspconfig'.cssls.setup {
+        cmd = { 'css-variables-language-server', '--stdio' },
+        filetypes = { 'css', 'scss', 'less' },
+        root_dir = lsp_util.root_pattern('package.json', '.git'),
+        -- Same as inlined defaults that don't seem to work without hardcoding them in the lua config
+        -- https://github.com/vunguyentuan/vscode-css-variables/blob/763a564df763f17aceb5f3d6070e0b444a2f47ff/packages/css-variables-language-server/src/CSSVariableManager.ts#L31-L50
+        settings = {
+          cssVariables = {
+            lookupFiles = { '**/*.less', '**/*.scss', '**/*.sass', '**/*.css' },
+            blacklistFolders = {
+              '**/.cache',
+              '**/.DS_Store',
+              '**/.git',
+              '**/.hg',
+              '**/.next',
+              '**/.svn',
+              '**/bower_components',
+              '**/CVS',
+              '**/dist',
+              '**/node_modules',
+              '**/tests',
+              '**/tmp',
+            },
+          },
+        },
+      }
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
@@ -800,7 +842,7 @@ require('lazy').setup({
         javascript = { { 'prettierd', 'prettier' } },
       },
     },
-    config = function() 
+    config = function()
       vim.api.nvim_create_user_command("Format", function(args)
         local range = nil
         if args.count ~= -1 then
