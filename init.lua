@@ -741,6 +741,48 @@ require('lazy').setup({
       --  You can press `g?` for help in this menu.
       require('mason').setup()
 
+      local css_capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+      require('lspconfig').cssls.setup {
+        capabilities = css_capabilities,
+        cmd = { 'vscode-css-language-server', '--stdio' },
+        filetypes = { 'css' },
+        init_options = { provideFormatter = false }, -- needed to enable formatting capabilities
+        root_dir = lsp_util.root_pattern('package.json', '.git'),
+        single_file_support = true,
+        settings = {
+          css = { validate = true },
+        },
+      }
+
+      require('lspconfig').css_variables.setup {
+        cmd = { 'css-variables-language-server', '--stdio' },
+        filetypes = { 'css', 'scss', 'less' },
+        root_dir = lsp_util.root_pattern('package.json', '.git'),
+        -- Same as inlined defaults that don't seem to work without hardcoding them in the lua config
+        -- https://github.com/vunguyentuan/vscode-css-variables/blob/763a564df763f17aceb5f3d6070e0b444a2f47ff/packages/css-variables-language-server/src/CSSVariableManager.ts#L31-L50
+        settings = {
+          cssVariables = {
+            lookupFiles = { '**/*.less', '**/*.scss', '**/*.sass', '**/*.css' },
+            blacklistFolders = {
+              '**/.cache',
+              '**/.DS_Store',
+              '**/.git',
+              '**/.hg',
+              '**/.next',
+              '**/.svn',
+              '**/bower_components',
+              '**/CVS',
+              '**/dist',
+              '**/node_modules',
+              '**/tests',
+              '**/tmp',
+            },
+          },
+        },
+      }
+
       require('lspconfig').dartls.setup {
         cmd = { 'dart', 'language-server', '--protocol=lsp' },
         filetypes = { 'dart' },
