@@ -669,10 +669,9 @@ require('lazy').setup({
           filetypes = {
             'javascript',
             'typescript',
-            'vue',
           },
         },
-        volar = {},
+        vuels = {},
         -- dartls = {},
         intelephense = {
           init_options = {
