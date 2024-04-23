@@ -671,7 +671,7 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         tsserver = {},
-        volar = {},
+        vuels = {},
         intelephense = {
           init_options = {
             licenceKey = '00D530S8G6M33CH',
