@@ -675,6 +675,8 @@ require('lazy').setup({
         tsserver = {},
         bashls = {},
         vuels = {},
+        emmet_language_server = {},
+        html = {},
         intelephense = {
           init_options = {
             licenceKey = '00D530S8G6M33CH',
@@ -856,6 +858,7 @@ require('lazy').setup({
         lua = { 'stylua' },
         bash = { 'shfmt' },
         sh = { 'shfmt' },
+        zsh = { 'shfmt' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
