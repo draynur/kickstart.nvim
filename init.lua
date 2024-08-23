@@ -283,8 +283,42 @@ require('lazy').setup({
       'nvim-tree/nvim-web-devicons', -- Optional but recommended
     },
     config = function()
-      require('render-markdown').setup {}
+      require('render-markdown').setup {
+        enabled = true,
+      }
     end,
+  },
+  -- install with yarn or npm
+  {
+    'iamcco/markdown-preview.nvim',
+    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
+    build = 'cd app && yarn install',
+    init = function()
+      vim.g.mkdp_filetypes = { 'markdown' }
+      vim.g.mkdp_auto_start = 1
+      vim.g.mkdp_auto_close = 1
+      vim.g.mkdp_refresh_slow = 1
+    end,
+    ft = { 'markdown' },
+  },
+  {
+    'cameron-wags/rainbow_csv.nvim',
+    config = true,
+    ft = {
+      'csv',
+      'tsv',
+      'csv_semicolon',
+      'csv_whitespace',
+      'csv_pipe',
+      'rfc_csv',
+      'rfc_semicolon',
+    },
+    cmd = {
+      'RainbowDelim',
+      'RainbowDelimSimple',
+      'RainbowDelimQuoted',
+      'RainbowMultiDelim',
+    },
   },
   {
     'nvim-neo-tree/neo-tree.nvim',
