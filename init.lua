@@ -819,7 +819,7 @@ require('lazy').setup({
       require('lspconfig').cssls.setup {
         capabilities = css_capabilities,
         cmd = { 'vscode-css-language-server', '--stdio' },
-        filetypes = { 'css', 'less', 'scss', 'vue' },
+        filetypes = { 'css', 'less', 'scss' },
         init_options = { provideFormatter = false }, -- needed to enable formatting capabilities
         root_dir = lsp_util.root_pattern('package.json', '.git'),
         single_file_support = true,
