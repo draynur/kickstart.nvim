@@ -211,7 +211,6 @@ vim.keymap.set('n', '<leader>nn', ':NeoTreeFloat<cr>', { desc = 'Open nvim tree 
 vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
 vim.keymap.set('n', '<leader>ff', ':HopChar1<cr>', { desc = 'Go to any word' })
 -- Keymaps for using Gitsigns
-vim.keymap.set('n', '<leader>df', ':Gitsigns diffthis<cr>', { desc = 'Diff this file.' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -399,6 +398,27 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      preview_config = {
+        -- Options passed to nvim_open_win
+        border = 'single',
+        style = 'minimal',
+        relative = 'cursor',
+        row = 0,
+        col = 1,
+        splitright = true,
+      },
+      on_attach = function(bufnr)
+        local gitsigns = require 'gitsigns'
+
+        local function map(mode, l, r, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, l, r, opts)
+        end
+
+        -- Actions
+        map('n', '<leader>df', gitsigns.diffthis, { desc = 'Diff this file.' })
+      end,
     },
   },
 
