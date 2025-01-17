@@ -878,6 +878,29 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'vue-language-server',
+        'csharpier',
+        'csharp-language-server',
+        'bash-language-server',
+        'sql-formatter',
+        'twigcs',
+        'stylua',
+        'prettierd',
+        'rust-analyzer',
+        'shfmt',
+        'prettier',
+        'autopep8',
+        'emmet-language-server',
+        'lua-language-server',
+        'beautysh',
+        'css-lsp',
+        'fixjson',
+        'html-lsp',
+        'intelephense',
+        'python-lsp-server',
+        'some-sass-language-server',
+        'typescript-language-server',
+        'vim-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
