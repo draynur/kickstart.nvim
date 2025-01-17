@@ -767,7 +767,7 @@ require('lazy').setup({
               'polylang',
             },
             environment = {
-              includePaths = '/home/jack/.composer/vendor/php-stubs',
+              includePaths = vim.fn.stdpath 'config' .. '/vendor/php-stubs',
               shortOpenTag = true,
             },
             diagnostics = {
