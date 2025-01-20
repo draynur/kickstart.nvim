@@ -879,8 +879,6 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
         'vue-language-server',
-        'csharpier',
-        'csharp-language-server',
         'bash-language-server',
         'sql-formatter',
         'twigcs',
