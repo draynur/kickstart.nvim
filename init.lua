@@ -742,7 +742,22 @@ require('lazy').setup({
           filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
         },
         bashls = {},
-        emmet_language_server = {},
+        emmet_language_server = {
+          filetypes = {
+            'css',
+            'eruby',
+            'html',
+            'htmldjango',
+            'javascriptreact',
+            'less',
+            'pug',
+            'php',
+            'sass',
+            'scss',
+            'typescriptreact',
+            'htmlangular',
+          },
+        },
         html = {},
         intelephense = {
           init_options = {
@@ -775,6 +790,11 @@ require('lazy').setup({
             },
             format = {
               enable = true,
+              braces = 'k&r', -- Optional: Configure brace style
+              indent = {
+                style = 'space',
+                size = 2, -- Use 2 spaces
+              },
             },
             files = {
               maxSize = 5000000,
@@ -899,7 +919,7 @@ require('lazy').setup({
         'some-sass-language-server',
         'typescript-language-server',
         'vim-language-server',
-        'standardjs'
+        'standardjs',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
