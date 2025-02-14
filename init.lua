@@ -211,7 +211,7 @@ vim.keymap.set('n', '<leader>nn', ':NeoTreeFloat<cr>', { desc = 'Open nvim tree 
 vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
 vim.keymap.set('n', '<leader>ff', ':HopChar1<cr>', { desc = 'Go to any word' })
 -- Keymaps for using Gitsigns
-vim.keymap.set('n', '<leader>df', ':Gitsigns diffthis<cr>', { desc = 'Diff this file.' })
+vim.keymap.set('n', '<leader>df', ':vertical rightbelow Gitsigns diffthis<cr>', { desc = 'Diff this file.' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
