@@ -1125,8 +1125,9 @@ require('lazy').setup({
         },
 
         -- Custom Highlights --
-        colors = {}, -- Override default colors
-        highlights = {}, -- Override highlight groups
+        colors = {
+          grey = '#9099A9',
+        }, -- Override default colors
 
         -- Plugins Config --
         diagnostics = {
