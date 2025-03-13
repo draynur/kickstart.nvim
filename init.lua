@@ -897,29 +897,30 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-        'vue-language-server',
-        'bash-language-server',
-        'sql-formatter',
-        'twigcs',
-        'stylua',
-        'prettierd',
-        'rust-analyzer',
-        'shfmt',
-        'prettier',
         'autopep8',
-        'emmet-language-server',
-        'lua-language-server',
+        'bash-language-server',
         'beautysh',
         'css-lsp',
+        'emmet-language-server',
         'fixjson',
         'html-lsp',
         'intelephense',
+        'jq',
+        'lua-language-server',
+        'prettier',
+        'prettierd',
         'python-lsp-server',
+        'rust-analyzer',
+        'shfmt',
         'some-sass-language-server',
+        'sql-formatter',
+        'standardjs',
+        'stylua',
+        'stylua',
+        'twigcs',
         'typescript-language-server',
         'vim-language-server',
-        'standardjs',
+        'vue-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -958,6 +959,7 @@ require('lazy').setup({
         bash = { 'shfmt' },
         sh = { 'shfmt' },
         zsh = { 'shfmt' },
+        json = { 'jq' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
