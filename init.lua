@@ -956,9 +956,9 @@ require('lazy').setup({
       notify_on_error = true,
       formatters_by_ft = {
         lua = { 'stylua' },
-        bash = { 'shfmt' },
-        sh = { 'shfmt' },
-        zsh = { 'shfmt' },
+        bash = { 'beautysh' },
+        sh = { 'beautysh' },
+        zsh = { 'beautysh' },
         json = { 'jq' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
