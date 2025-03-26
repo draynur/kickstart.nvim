@@ -907,6 +907,7 @@ require('lazy').setup({
         'intelephense',
         'jq',
         'lua-language-server',
+        'mdformat',
         'prettier',
         'prettierd',
         'python-lsp-server',
@@ -965,8 +966,11 @@ require('lazy').setup({
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        scss = { 'prettierd', 'prettier', stop_after_first = true },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
         vue = { 'prettierd', 'prettier', stop_after_first = true },
+        markdown = { 'mdformat' },
       },
     },
   },
@@ -1220,7 +1224,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -1267,6 +1271,27 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
+  {
+    -- Use the module name (relative to 'lua/') if the plugin is a single file.
+    'gemini',
+    -- Lazy load when the key is pressed.
+    dir = vim.fn.stdpath 'config' .. '/lua/gemini',
+    lazy = true,
+    keys = {
+      {
+        '<leader>gl',
+        function()
+          require('gemini').run()
+        end,
+        desc = 'Run Gemini Flash',
+      },
+    },
+    -- Optionally, if you need any additional configuration once the module is loaded:
+    config = function()
+      -- You could also set up additional settings here if needed.
+      -- For example, you might want to define more key mappings.
+    end,
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
