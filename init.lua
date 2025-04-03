@@ -211,6 +211,7 @@ vim.keymap.set('n', '<leader>nn', ':NeoTreeFloat<cr>', { desc = 'Open nvim tree 
 vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
 vim.keymap.set('n', '<leader>ff', ':HopChar1<cr>', { desc = 'Go to any word' })
 -- Keymaps for using Gitsigns
+vim.keymap.set('n', '<leader>df', ':vertical rightbelow Gitsigns diffthis<cr>', { desc = 'Diff this file.' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -298,7 +299,7 @@ require('lazy').setup({
     build = 'cd app && yarn install',
     init = function()
       vim.g.mkdp_filetypes = { 'markdown' }
-      vim.g.mkdp_auto_start = 1
+      vim.g.mkdp_auto_start = 0
       vim.g.mkdp_auto_close = 1
       vim.g.mkdp_refresh_slow = 1
       vim.g.mkdp_echo_preview_url = 1
@@ -762,7 +763,22 @@ require('lazy').setup({
           filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
         },
         bashls = {},
-        emmet_language_server = {},
+        emmet_language_server = {
+          filetypes = {
+            'css',
+            'eruby',
+            'html',
+            'htmldjango',
+            'javascriptreact',
+            'less',
+            'pug',
+            'php',
+            'sass',
+            'scss',
+            'typescriptreact',
+            'htmlangular',
+          },
+        },
         html = {},
         intelephense = {
           init_options = {
@@ -787,7 +803,7 @@ require('lazy').setup({
               'polylang',
             },
             environment = {
-              includePaths = '/home/jack/.composer/vendor/php-stubs',
+              includePaths = vim.fn.stdpath 'config' .. '/vendor/php-stubs',
               shortOpenTag = true,
             },
             diagnostics = {
@@ -795,6 +811,11 @@ require('lazy').setup({
             },
             format = {
               enable = true,
+              braces = 'k&r', -- Optional: Configure brace style
+              indent = {
+                style = 'space',
+                size = 2, -- Use 2 spaces
+              },
             },
             files = {
               maxSize = 5000000,
@@ -839,7 +860,7 @@ require('lazy').setup({
       require('lspconfig').cssls.setup {
         capabilities = css_capabilities,
         cmd = { 'vscode-css-language-server', '--stdio' },
-        filetypes = { 'css', 'less', 'scss', 'vue' },
+        filetypes = { 'css', 'less', 'scss' },
         init_options = { provideFormatter = false }, -- needed to enable formatting capabilities
         root_dir = lsp_util.root_pattern('package.json', '.git'),
         single_file_support = true,
@@ -897,7 +918,31 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'autopep8',
+        'bash-language-server',
+        'beautysh',
+        'css-lsp',
+        'emmet-language-server',
+        'fixjson',
+        'html-lsp',
+        'intelephense',
+        'jq',
+        'lua-language-server',
+        'mdformat',
+        'prettier',
+        'prettierd',
+        'python-lsp-server',
+        'rust-analyzer',
+        'shfmt',
+        'some-sass-language-server',
+        'sql-formatter',
+        'standardjs',
+        'stylua',
+        'stylua',
+        'twigcs',
+        'typescript-language-server',
+        'vim-language-server',
+        'vue-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -930,29 +975,23 @@ require('lazy').setup({
       },
     },
     opts = {
-      notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true, php = true, scss = true, css = true, less = true }
-        return {
-          timeout_ms = 500,
-          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
-        }
-      end,
+      notify_on_error = true,
       formatters_by_ft = {
         lua = { 'stylua' },
-        bash = { 'shfmt' },
-        sh = { 'shfmt' },
-        zsh = { 'shfmt' },
+        bash = { 'beautysh' },
+        sh = { 'beautysh' },
+        zsh = { 'beautysh' },
+        json = { 'jq' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        scss = { 'prettierd', 'prettier', stop_after_first = true },
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
         vue = { 'prettierd', 'prettier', stop_after_first = true },
+        markdown = { 'mdformat' },
       },
     },
   },
@@ -1062,6 +1101,56 @@ require('lazy').setup({
     end,
   },
   {
+    'navarasu/onedark.nvim',
+    priority = 1000, -- Make sure to load this before all the other start plugins.
+    init = function()
+      require('onedark').setup {
+        -- Main options --
+        style = 'dark', -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+        transparent = true, -- Show/hide background
+        term_colors = true, -- Change terminal color as per the selected theme style
+        ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
+        cmp_itemkind_reverse = false, -- reverse item kind highlights in cmp menu
+
+        -- toggle theme style ---
+        toggle_style_key = nil, -- keybind to toggle theme style. Leave it nil to disable it, or set it to a string, for example "<leader>ts"
+        toggle_style_list = { 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer', 'light' }, -- List of styles to toggle between
+
+        -- Change code style ---
+        -- Options are italic, bold, underline, none
+        -- You can configure multiple style with comma separated, For e.g., keywords = 'italic,bold'
+        code_style = {
+          comments = 'italic',
+          keywords = 'none',
+          functions = 'none',
+          strings = 'none',
+          variables = 'none',
+        },
+
+        -- Lualine options --
+        lualine = {
+          transparent = false, -- lualine center bar transparency
+          theme = 'onedark',
+        },
+
+        -- Custom Highlights --
+        colors = {
+          grey = '#9099A9',
+        }, -- Override default colors
+
+        -- Plugins Config --
+        diagnostics = {
+          darker = true, -- darker colors for diagnostic
+          undercurl = true, -- use undercurl instead of underline for diagnostics
+          background = true, -- use background color for virtual text
+        },
+      }
+      -- vim.o.background = 'dark'
+      vim.cmd.colorscheme 'onedark'
+      vim.cmd.set 'termguicolors'
+    end,
+  },
+  {
     'rebelot/kanagawa.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     init = function()
@@ -1083,9 +1172,14 @@ require('lazy').setup({
         overrides = function(colors) -- add/modify highlights
           return {}
         end,
-        theme = 'wave', -- Load "wave" theme when 'background' option is not set
+        theme = 'dragon', -- Load "wave" theme when 'background' option is not set
+        background = { -- map the value of 'background' option to a theme
+          dark = 'dragon', -- try "dragon" !
+        },
       }
-      vim.cmd.colorscheme 'kanagawa'
+      -- vim.o.background = 'dark'
+      -- vim.cmd.colorscheme 'kanagawa'
+      -- vim.cmd.set 'termguicolors'
     end,
   },
 
@@ -1133,7 +1227,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -1180,6 +1274,27 @@ require('lazy').setup({
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   -- { import = 'custom.plugins' },
+  {
+    -- Use the module name (relative to 'lua/') if the plugin is a single file.
+    'gemini',
+    -- Lazy load when the key is pressed.
+    dir = vim.fn.stdpath 'config' .. '/lua/gemini',
+    lazy = true,
+    keys = {
+      {
+        '<leader>gl',
+        function()
+          require('gemini').run()
+        end,
+        desc = 'Run Gemini Flash',
+      },
+    },
+    -- Optionally, if you need any additional configuration once the module is loaded:
+    config = function()
+      -- You could also set up additional settings here if needed.
+      -- For example, you might want to define more key mappings.
+    end,
+  },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
