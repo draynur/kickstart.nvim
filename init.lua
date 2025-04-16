@@ -914,7 +914,7 @@ require('lazy').setup({
         'rust-analyzer',
         'shfmt',
         'some-sass-language-server',
-        'sql-formatter',
+        'sleek',
         'standardjs',
         'stylua',
         'stylua',
@@ -973,6 +973,7 @@ require('lazy').setup({
         vue = { 'prettierd', 'prettier', stop_after_first = true },
         markdown = { 'mdformat' },
         twig = { 'twig-cs-fixer' },
+        sql = { 'sleek' }
       },
     },
   },
