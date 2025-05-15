@@ -755,10 +755,19 @@ require('lazy').setup({
             'sass',
             'scss',
             'typescriptreact',
+            'twig',
             'htmlangular',
           },
         },
-        html = {},
+        html = {
+          filetypes = { 'html', 'htmx', 'twig' },
+          configurationSection = { 'html', 'css', 'javascript' },
+          embeddedLanguages = {
+            css = true,
+            javascript = true,
+          },
+          provideFormatter = true,
+        },
         intelephense = {
           init_options = {
             licenceKey = '00D530S8G6M33CH',
@@ -973,7 +982,7 @@ require('lazy').setup({
         vue = { 'prettierd', 'prettier', stop_after_first = true },
         markdown = { 'mdformat' },
         twig = { 'twig-cs-fixer' },
-        sql = { 'sleek' }
+        sql = { 'sleek' },
       },
     },
   },
