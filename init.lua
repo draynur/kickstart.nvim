@@ -763,10 +763,180 @@ require('lazy').setup({
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
         --
-        -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
-        --
-
+        -- But for many setups, the LSP (`tsserver`) will work just fine
+        -- tsserver = {},
+        volar = {},
+        ts_ls = {
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = '/home/jack/.nvm/versions/node/v20.10.0/lib/node_modules/@vue/typescript-plugin/',
+                languages = { 'vue' },
+              },
+            },
+          },
+          filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+        },
+        bashls = {},
+        emmet_language_server = {
+          filetypes = {
+            'css',
+            'eruby',
+            'html',
+            'htmldjango',
+            'javascriptreact',
+            'less',
+            'pug',
+            'php',
+            'sass',
+            'scss',
+            'typescriptreact',
+            'htmlangular',
+          },
+        },
+        html = {},
+        intelephense = {
+          init_options = {
+            licenceKey = '00D530S8G6M33CH',
+          },
+          root_dir = lsp_util.root_pattern '.git',
+          settings = {
+            stubs = {
+              'bcmath',
+              'bz2',
+              'calendar',
+              'Core',
+              'curl',
+              'zip',
+              'zlib',
+              'wordpress',
+              'woocommerce',
+              'acf-pro',
+              'wordpress-globals',
+              'wp-cli',
+              'genesis',
+              'polylang',
+            },
+            environment = {
+              includePaths = vim.fn.stdpath 'config' .. '/vendor/php-stubs',
+              shortOpenTag = true,
+            },
+            diagnostics = {
+              enable = true,
+            },
+            format = {
+              enable = true,
+              braces = 'k&r', -- Optional: Configure brace style
+              indent = {
+                style = 'space',
+                size = 2, -- Use 2 spaces
+              },
+            },
+            files = {
+              maxSize = 5000000,
+              assocations = {
+                '*.php',
+                '*.phtml',
+                '*.module',
+                '*.inc',
+              },
+            },
+            telemetry = { enabled = false },
+          },
+        },
+        somesass_ls = {},
+        -- But for many setups, the LSP (`tsserver`) will work just fine
+        -- tsserver = {},
+        ts_ls = {
+          init_options = {
+            plugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = '/home/jack/.nvm/versions/node/v20.10.0/lib/node_modules/@vue/typescript-plugin/',
+                languages = { 'vue' },
+              },
+            },
+          },
+          filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+        },
+        bashls = {},
+        emmet_language_server = {
+          filetypes = {
+            'css',
+            'eruby',
+            'html',
+            'htmldjango',
+            'javascriptreact',
+            'less',
+            'pug',
+            'php',
+            'sass',
+            'scss',
+            'typescriptreact',
+            'twig',
+            'htmlangular',
+          },
+        },
+        html = {
+          filetypes = { 'html', 'htmx', 'twig' },
+          configurationSection = { 'html', 'css', 'javascript' },
+          embeddedLanguages = {
+            css = true,
+            javascript = true,
+          },
+          provideFormatter = true,
+        },
+        intelephense = {
+          init_options = {
+            licenceKey = '00D530S8G6M33CH',
+          },
+          root_dir = lsp_util.root_pattern '.git',
+          settings = {
+            stubs = {
+              'bcmath',
+              'bz2',
+              'calendar',
+              'Core',
+              'curl',
+              'zip',
+              'zlib',
+              'wordpress',
+              'woocommerce',
+              'acf-pro',
+              'wordpress-globals',
+              'wp-cli',
+              'genesis',
+              'polylang',
+            },
+            environment = {
+              includePaths = vim.fn.stdpath 'config' .. '/vendor/php-stubs',
+              shortOpenTag = true,
+            },
+            diagnostics = {
+              enable = true,
+            },
+            format = {
+              enable = true,
+              braces = 'k&r', -- Optional: Configure brace style
+              indent = {
+                style = 'space',
+                size = 2, -- Use 2 spaces
+              },
+            },
+            files = {
+              maxSize = 5000000,
+              assocations = {
+                '*.php',
+                '*.phtml',
+                '*.module',
+                '*.inc',
+              },
+            },
+            telemetry = { enabled = false },
+          },
+        },
+        somesass_ls = {},
         lua_ls = {
           -- cmd = { ... },
           -- filetypes = { ... },
@@ -876,11 +1046,12 @@ require('lazy').setup({
         'rust-analyzer',
         'shfmt',
         'some-sass-language-server',
-        'sql-formatter',
+        'sleek',
         'standardjs',
         'stylua',
         'stylua',
         'twigcs',
+        'twig-cs-fixer',
         'typescript-language-server',
         'vim-language-server',
         'vue-language-server',
@@ -936,6 +1107,8 @@ require('lazy').setup({
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
         vue = { 'prettierd', 'prettier', stop_after_first = true },
         markdown = { 'mdformat' },
+        twig = { 'twig-cs-fixer' },
+        sql = { 'sleek' },
       },
     },
   },
