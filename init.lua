@@ -765,7 +765,6 @@ require('lazy').setup({
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
         -- tsserver = {},
-        volar = {},
         ts_ls = {
           init_options = {
             plugins = {
@@ -800,98 +799,7 @@ require('lazy').setup({
           init_options = {
             licenceKey = '00D530S8G6M33CH',
           },
-          root_dir = lsp_util.root_pattern '.git',
-          settings = {
-            stubs = {
-              'bcmath',
-              'bz2',
-              'calendar',
-              'Core',
-              'curl',
-              'zip',
-              'zlib',
-              'wordpress',
-              'woocommerce',
-              'acf-pro',
-              'wordpress-globals',
-              'wp-cli',
-              'genesis',
-              'polylang',
-            },
-            environment = {
-              includePaths = vim.fn.stdpath 'config' .. '/vendor/php-stubs',
-              shortOpenTag = true,
-            },
-            diagnostics = {
-              enable = true,
-            },
-            format = {
-              enable = true,
-              braces = 'k&r', -- Optional: Configure brace style
-              indent = {
-                style = 'space',
-                size = 2, -- Use 2 spaces
-              },
-            },
-            files = {
-              maxSize = 5000000,
-              assocations = {
-                '*.php',
-                '*.phtml',
-                '*.module',
-                '*.inc',
-              },
-            },
-            telemetry = { enabled = false },
-          },
-        },
-        somesass_ls = {},
-        -- But for many setups, the LSP (`tsserver`) will work just fine
-        -- tsserver = {},
-        ts_ls = {
-          init_options = {
-            plugins = {
-              {
-                name = '@vue/typescript-plugin',
-                location = '/home/jack/.nvm/versions/node/v20.10.0/lib/node_modules/@vue/typescript-plugin/',
-                languages = { 'vue' },
-              },
-            },
-          },
-          filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-        },
-        bashls = {},
-        emmet_language_server = {
-          filetypes = {
-            'css',
-            'eruby',
-            'html',
-            'htmldjango',
-            'javascriptreact',
-            'less',
-            'pug',
-            'php',
-            'sass',
-            'scss',
-            'typescriptreact',
-            'twig',
-            'htmlangular',
-          },
-        },
-        html = {
-          filetypes = { 'html', 'htmx', 'twig' },
-          configurationSection = { 'html', 'css', 'javascript' },
-          embeddedLanguages = {
-            css = true,
-            javascript = true,
-          },
-          provideFormatter = true,
-        },
-        intelephense = {
-          init_options = {
-            licenceKey = '00D530S8G6M33CH',
-          },
-          root_dir = lsp_util.root_pattern '.git',
+          root_markers = { '.git' },
           settings = {
             stubs = {
               'bcmath',
@@ -974,7 +882,7 @@ require('lazy').setup({
         cmd = { 'vscode-css-language-server', '--stdio' },
         filetypes = { 'css', 'less', 'scss' },
         init_options = { provideFormatter = false }, -- needed to enable formatting capabilities
-        root_markers = {'package.json', '.git'},
+        root_markers = { 'package.json', '.git' },
         single_file_support = true,
         settings = {
           css = { validate = true },
@@ -983,7 +891,7 @@ require('lazy').setup({
       vim.lsp.config('css_variables', {
         cmd = { 'css-variables-language-server', '--stdio' },
         filetypes = { 'css', 'scss', 'less' },
-        root_markers = {'package.json', '.git'},
+        root_markers = { 'package.json', '.git' },
         -- Same as inlined defaults that don't seem to work without hardcoding them in the lua config
         -- https://github.com/vunguyentuan/vscode-css-variables/blob/763a564df763f17aceb5f3d6070e0b444a2f47ff/packages/css-variables-language-server/src/CSSVariableManager.ts#L31-L50
         settings = {
@@ -1048,7 +956,6 @@ require('lazy').setup({
         'some-sass-language-server',
         'sleek',
         'standardjs',
-        'stylua',
         'stylua',
         'twigcs',
         'twig-cs-fixer',
