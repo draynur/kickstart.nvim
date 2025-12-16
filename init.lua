@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -159,7 +159,7 @@ vim.o.inccommand = 'split'
 vim.o.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
-vim.o.scrolloff = 10
+vim.o.scrolloff = 15
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s)
@@ -174,6 +174,9 @@ vim.o.confirm = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
@@ -194,10 +197,31 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
+vim.keymap.set('n', '<C-c>', '<C-c>', { silent = true }) -- Real Gs move in silent
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<leader>1', '1gt', { desc = 'Move to the first tab' })
+vim.keymap.set('n', '<leader>2', '2gt', { desc = 'Move to the second tab' })
+vim.keymap.set('n', '<leader>3', '3gt', { desc = 'Move to the third tab' })
+vim.keymap.set('n', '<leader>4', '4gt', { desc = 'Move to the fourth tab' })
+vim.keymap.set('n', '<leader>5', '5gt', { desc = 'Move to the fifth tab' })
+vim.keymap.set('n', '<leader>6', '6gt', { desc = 'Move to the sixth tab' })
+vim.keymap.set('n', '<leader>7', '7gt', { desc = 'Move to the seventh tab' })
+vim.keymap.set('n', '<leader>8', '8gt', { desc = 'Move to the eigth tab' })
+vim.keymap.set('n', '<leader>9', '9gt', { desc = 'Move to the ninth tab' })
+vim.keymap.set('n', '<leader>0', 'tablast<cr>', { desc = 'Move to the previous tab' })
+
+vim.keymap.set('n', '<leader>e.', ':e .<cr>', { desc = 'Open current directory in NetRW' })
+vim.keymap.set('n', '<leader>nn', ':Neotree<cr>', { desc = 'Open nvim tree in current directory' })
+
+vim.keymap.set('n', '<leader>nn', ':NeoTreeFloat<cr>', { desc = 'Open nvim tree in current directory' })
+-- Keymaps for using HopWord
+vim.keymap.set('n', '<leader>ww', ':HopWord<cr>', { desc = 'Go to any word' })
+vim.keymap.set('n', '<leader>ff', ':HopChar1<cr>', { desc = 'Go to any word' })
+-- Keymaps for using Gitsigns
+vim.keymap.set('n', '<leader>df', ':vertical rightbelow Gitsigns diffthis<cr>', { desc = 'Diff this file.' })
 
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
@@ -219,6 +243,35 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+vim.api.nvim_create_augroup('bg', {})
+
+-- Check if the 'autocmd' feature is available
+if vim.fn.has 'autocmd' == 1 then
+  -- Create the 'module' augroup
+  local module_group = vim.api.nvim_create_augroup('drupal/php', { clear = true })
+  -- Add commonly used Drupal files as PHP
+  vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+    pattern = { '*.module', '*.theme', '*.install', '*.inc', '*.profile', '*.view' },
+    command = 'set filetype=php',
+    group = module_group,
+  })
+  -- PHP Shit? Not sure where I got this
+  vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'php',
+    command = 'set omnifunc=phpcomplete',
+    group = module_group,
+  })
+  -- Transparent background stuff
+  vim.api.nvim_create_autocmd('VimEnter', {
+    group = 'bg',
+    pattern = '*',
+    callback = function()
+      vim.cmd 'highlight Normal ctermbg=none guibg=NONE'
+      vim.cmd 'highlight NonText ctermbg=none guibg=NONE'
+      vim.cmd 'highlight LineNr ctermbg=none guibg=NONE'
+    end,
+  })
+end
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
@@ -281,6 +334,27 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
+      preview_config = {
+        -- Options passed to nvim_open_win
+        border = 'single',
+        style = 'minimal',
+        relative = 'cursor',
+        row = 0,
+        col = 1,
+        splitright = true,
+      },
+      on_attach = function(bufnr)
+        local gitsigns = require 'gitsigns'
+
+        local function map(mode, l, r, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, l, r, opts)
+        end
+
+        -- Actions
+        map('n', '<leader>df', gitsigns.diffthis, { desc = 'Diff this file.' })
+      end,
     },
   },
 
@@ -429,6 +503,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sfg', builtin.git_files, { desc = '[S]earch [G]it [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -537,7 +612,7 @@ require('lazy').setup({
 
           -- Rename the variable under your cursor.
           --  Most Language Servers support renaming across files, etc.
-          map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
 
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
@@ -553,11 +628,11 @@ require('lazy').setup({
           -- Jump to the definition of the word under your cursor.
           --  This is where a variable was first declared, or where a function is defined, etc.
           --  To jump back, press <C-t>.
-          map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+          map('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
-          map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+          map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
@@ -571,6 +646,14 @@ require('lazy').setup({
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
           map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
+
+          -- Execute a code action, usually your cursor needs to be on top of an error
+          -- or a suggestion from your LSP for this to activate.
+          map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+          -- Opens a popup that displays documentation about the word under your cursor
+          --  See `:help K` for why this keymap.
+          map('K', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
@@ -711,11 +794,96 @@ require('lazy').setup({
       -- `mason` had to be setup earlier: to configure its options see the
       -- `dependencies` table for `nvim-lspconfig` above.
       --
+      require('mason').setup()
+
+      local css_capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+      vim.lsp.config('cssls', {
+        capabilities = css_capabilities,
+        cmd = { 'vscode-css-language-server', '--stdio' },
+        filetypes = { 'css', 'less', 'scss' },
+        init_options = { provideFormatter = false }, -- needed to enable formatting capabilities
+        root_markers = {'package.json', '.git'},
+        single_file_support = true,
+        settings = {
+          css = { validate = true },
+        },
+      })
+      vim.lsp.config('css_variables', {
+        cmd = { 'css-variables-language-server', '--stdio' },
+        filetypes = { 'css', 'scss', 'less' },
+        root_markers = {'package.json', '.git'},
+        -- Same as inlined defaults that don't seem to work without hardcoding them in the lua config
+        -- https://github.com/vunguyentuan/vscode-css-variables/blob/763a564df763f17aceb5f3d6070e0b444a2f47ff/packages/css-variables-language-server/src/CSSVariableManager.ts#L31-L50
+        settings = {
+          cssVariables = {
+            lookupFiles = { '**/*.less', '**/*.scss', '**/*.sass', '**/*.css' },
+            blacklistFolders = {
+              '**/.cache',
+              '**/.DS_Store',
+              '**/.git',
+              '**/.hg',
+              '**/.next',
+              '**/.svn',
+              '**/bower_components',
+              '**/CVS',
+              '**/dist',
+              '**/node_modules',
+              '**/tests',
+              '**/tmp',
+            },
+          },
+        },
+      })
+      vim.lsp.config('dartls', {
+        cmd = { 'dart', 'language-server', '--protocol=lsp' },
+        filetypes = { 'dart' },
+        root_markers = { 'pubspec.yaml' },
+        init_options = {
+          onlyAnalyzeProjectsWithOpenFiles = true,
+          suggestFromUnimportedLibraries = true,
+          closingLabels = true,
+          outline = true,
+          flutterOutline = true,
+        },
+        settings = {
+          dart = {
+            completeFunctionCalls = true,
+            showTodos = true,
+          },
+        },
+      })
+
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        'autopep8',
+        'bash-language-server',
+        'beautysh',
+        'css-lsp',
+        'emmet-language-server',
+        'fixjson',
+        'html-lsp',
+        'intelephense',
+        'jq',
+        'lua-language-server',
+        'mdformat',
+        'prettier',
+        'prettierd',
+        'python-lsp-server',
+        'rust-analyzer',
+        'shfmt',
+        'some-sass-language-server',
+        'sql-formatter',
+        'standardjs',
+        'stylua',
+        'stylua',
+        'twigcs',
+        'typescript-language-server',
+        'vim-language-server',
+        'vue-language-server',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -742,30 +910,16 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        '<leader>i',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = 'Format buffer',
       },
     },
     opts = {
       notify_on_error = false,
-      format_on_save = function(bufnr)
-        -- Disable "format_on_save lsp_fallback" for languages that don't
-        -- have a well standardized coding style. You can add additional
-        -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
-        if disable_filetypes[vim.bo[bufnr].filetype] then
-          return nil
-        else
-          return {
-            timeout_ms = 500,
-            lsp_format = 'fallback',
-          }
-        end
-      end,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -773,6 +927,15 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        bash = { 'beautysh' },
+        sh = { 'beautysh' },
+        zsh = { 'beautysh' },
+        json = { 'jq' },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        scss = { 'prettierd', 'prettier', stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        vue = { 'prettierd', 'prettier', stop_after_first = true },
+        markdown = { 'mdformat' },
       },
     },
   },
@@ -894,7 +1057,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      -- vim.cmd.colorscheme 'tokyonight-night'
     end,
   },
 
@@ -949,6 +1112,7 @@ require('lazy').setup({
       auto_install = true,
       highlight = {
         enable = true,
+        disable = { 'git', 'diff', 'gitdiff', 'gitcommit' },
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
@@ -973,18 +1137,18 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
   --
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
