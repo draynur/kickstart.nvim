@@ -936,6 +936,22 @@ require('lazy').setup({
         },
       })
 
+      -- Setup for for vue_ls/ts_ls
+      local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
+      vim.lsp.config('vue_ls', {})
+      vim.lsp.config('ts_ls', {
+        init_options = {
+          plugins = {
+            name = '@vue/typescript-plugin',
+            location = vue_language_server_path,
+            languages = { 'vue' },
+            configNamespace = 'typescript',
+          },
+        },
+        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+      })
+      vim.lsp.enable { 'ts_ls', 'vue_ls' }
+
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
@@ -957,10 +973,8 @@ require('lazy').setup({
         'rust-analyzer',
         'shfmt',
         'some-sass-language-server',
-        'sleek',
         'standardjs',
         'stylua',
-        'twigcs',
         'twig-cs-fixer',
         'typescript-language-server',
         'vim-language-server',
@@ -1018,7 +1032,6 @@ require('lazy').setup({
         vue = { 'prettierd', 'prettier', stop_after_first = true },
         markdown = { 'mdformat' },
         twig = { 'twig-cs-fixer' },
-        sql = { 'sleek' },
       },
     },
   },
