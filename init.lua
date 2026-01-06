@@ -942,10 +942,12 @@ require('lazy').setup({
       vim.lsp.config('ts_ls', {
         init_options = {
           plugins = {
-            name = '@vue/typescript-plugin',
-            location = vue_language_server_path,
-            languages = { 'vue' },
-            configNamespace = 'typescript',
+            {
+              name = '@vue/typescript-plugin',
+              location = vue_language_server_path,
+              languages = { 'vue' },
+              configNamespace = 'typescript',
+            },
           },
         },
         filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
