@@ -11,6 +11,6 @@ return {
   },
   lazy = false,
   keys = {
-    { '<leader>nn', ':Neotree float toggle<CR>', desc = 'NeoTree toggle', silent = true },
+    { '<leader>n', ':Neotree float toggle<CR>', desc = 'NeoTree toggle', silent = true },
   },
 }
