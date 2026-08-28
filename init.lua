@@ -968,6 +968,7 @@ require('lazy').setup({
         'intelephense',
         'jq',
         'lua-language-server',
+        'markdownlint', -- markdown linter used by kickstart.plugins.lint
         'mdformat',
         'prettier',
         'prettierd',

@@ -1,14 +1,18 @@
 return {
   {
-    'MeanderingProgrammer/markdown.nvim',
+    'MeanderingProgrammer/render-markdown.nvim',
     name = 'render-markdown', -- Only needed if you have another plugin named markdown.nvim
     dependencies = {
-      { 'nvim-treesitter/nvim-treesitter', branch = 'main' }, -- Mandatory
+      'nvim-treesitter/nvim-treesitter', -- Mandatory -- configured in custom/plugins/treesitter.lua (main branch)
       'nvim-tree/nvim-web-devicons', -- Optional but recommended
     },
+    ft = { 'markdown', 'markdown.mdx', 'codecompanion' },
     config = function()
       require('render-markdown').setup {
         enabled = true,
+        -- No `latex` parser installed; turning it off avoids checkhealth
+        -- warnings and stray errors on math blocks inside markdown.
+        latex = { enabled = false },
       }
     end,
   },
