@@ -77,6 +77,15 @@ return {
           return
         end
 
+        -- `get_lang()` falls back to the filetype name itself when there's no
+        -- explicit mapping (e.g. fidget.nvim's scratch buffers use filetype
+        -- "fidget", which isn't a real treesitter language). Bail out quietly
+        -- instead of letting `ts.install()` warn "skipping unsupported
+        -- language" on every such buffer.
+        if not require('nvim-treesitter.parsers')[lang] then
+          return
+        end
+
         -- vim regex highlighting is still needed on top of treesitter for a
         -- couple of languages (indent rules etc.); mirror the old config.
         local also_vim_regex = { ruby = true }
