@@ -13,8 +13,10 @@
 -- a FileType autocommand (see `:h nvim-treesitter` on the main branch).
 --
 -- Requires a `tree-sitter` CLI (>= 0.26.1) on PATH plus a C compiler. Installed
--- here via Homebrew (`brew install tree-sitter-cli`); on a machine without it,
--- `:TSInstall`/`:TSUpdate` will report the missing executable.
+-- here via Homebrew (`brew install tree-sitter-cli`; on Homebrew the CLI binary
+-- ships as the `tree-sitter-cli` formula, not the `tree-sitter` formula, which
+-- is just the C library). On a machine without it, `:TSInstall`/`:TSUpdate`
+-- will report the missing executable.
 
 local ensure_installed = {
   'bash',
